@@ -1,11 +1,26 @@
 import React from "react";
+import { connect } from "react-redux";
 
-import LoginContainer from "./containers/login/login";
+import LoginComponent from "./components/login/login";
+import BlankComponent from "./components/BlankComponent";
+import { logIn } from "./actions";
 
-function App() {
-  return (
-    <LoginContainer />
-  );
-}
+const App = ({ isLogged, logIn }) => (
+  <>
+    {isLogged ? (
+      <BlankComponent />
+    ) : (
+      <LoginComponent loginCallback={logIn} />
+    )}
+  </>
+);
 
-export default App;
+const mapStateToProps = state => ({
+  isLogged: state.login.isLogged
+});
+
+const mapDispatchToProps = dispatch => ({
+  logIn: () => dispatch(logIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

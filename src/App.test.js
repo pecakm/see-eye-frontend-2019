@@ -1,13 +1,32 @@
 import React from "react";
-import { shallow } from "enzyme";
-import App from "./App";
-import LoginContainer from "./containers/login/login";
+import { mount } from "enzyme";
+import configureStore from "redux-mock-store";
 
-it("renders without crashing", () => {
-  shallow(<App />);
-});
+import ConnectedApp from "./App";
+import LoginContainer from "./components/login/login";
 
-it("contains Login Container", () => {
-  const app = shallow(<App />);
-  expect(app.containsMatchingElement(<LoginContainer />)).toEqual(true);
+describe("App Component", () => {
+  const mockStore = configureStore();
+  let state = { login: { isLogged: false } };
+  let component, store;
+
+  beforeEach(() => {
+    store = mockStore(state);
+    component = mount(<ConnectedApp store={store} />);
+  });
+
+  it("renders without crashing", () => {
+    expect(component.length).toEqual(1);
+  });
+  
+  it("contains Login Container on start", () => {
+    expect(component.containsMatchingElement(<LoginContainer />)).toEqual(true);
+  });
+
+  it("doesn't show Login Container after login", () => {
+    state = { login: { isLogged: true } };
+    store = mockStore(state);
+    component = mount(<ConnectedApp store={store} />);
+    expect(component.containsMatchingElement(<LoginContainer />)).toEqual(false);
+  });
 });
