@@ -1,16 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import { Route, BrowserRouter } from "react-router-dom";
 
 import "./index.css";
-import App from "./App";
+import RoomsContainer from "./containers/Rooms/Rooms";
+import LoginComponent from "./components/Login/Login";
 import * as serviceWorker from "./serviceWorker";
 import "./i18n";
 import store from "./store";
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <div>
+        <Route exact path="/" component={LoginComponent} />
+        <Route exact path="/rooms" component={RoomsContainer} />
+      </div>
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );

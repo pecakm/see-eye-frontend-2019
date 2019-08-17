@@ -1,5 +1,5 @@
-import React from "react";
-import { mount } from "enzyme";
+import React from "./node_modules/react";
+import { mount } from "./node_modules/enzyme";
 
 import LoginComponent from "./login";
 

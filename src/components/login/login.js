@@ -1,19 +1,29 @@
 import React from "react";
 import { withTranslation } from "react-i18next";
+import { connect } from "react-redux";
+
+import { logIn } from "../../actions";
 
 class LoginComponent extends React.Component {
-  onLoginClick() {
-    this.props.loginCallback();
+  componentDidMount() {
+    const { isLogged, history } = this.props;
+    if (isLogged) history.push("/rooms");
   }
 
-  render() {
-    const { t } = this.props;
+  loginClicked = () => {
+    const { history, logIn } = this.props;
+    history.push("/rooms");
+    logIn();
+  }; 
 
-    return (
+  render() {
+    const { t, isLogged } = this.props;
+
+    return isLogged ? <div /> : (
       <div>
         <input type="text" />
         <input type="password" />
-        <button onClick={() => this.onLoginClick()}>
+        <button onClick={this.loginClicked}>
           {t("login")}
         </button>
       </div>
@@ -21,4 +31,12 @@ class LoginComponent extends React.Component {
   }
 };
 
-export default withTranslation()(LoginComponent);
+const mapStateToProps = state => ({
+  isLogged: state.login.isLogged
+});
+
+const mapDispatchToProps = dispatch => ({
+  logIn: () => dispatch(logIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(LoginComponent));
