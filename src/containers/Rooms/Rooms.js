@@ -9,6 +9,11 @@ class Rooms extends React.Component {
     if (!isLogged) history.push("/");
   }
 
+  searchUser = () => {
+    const { history } = this.props;
+    history.push("/search");
+  };
+
   startConversation = () => {
     const { history } = this.props;
     history.push("/chat");
@@ -19,6 +24,11 @@ class Rooms extends React.Component {
 
     return !isLogged ? <div /> : (
       <div>
+        <div>
+          <button onClick={this.searchUser}>
+            {t("ROOMS.SEARCH_USER")}
+          </button>
+        </div>
         <button onClick={this.startConversation}>
           {t("ROOMS.START_CHAT")}
         </button>

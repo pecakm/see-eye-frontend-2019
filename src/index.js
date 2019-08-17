@@ -7,6 +7,7 @@ import "./index.css";
 import Rooms from "./containers/Rooms/Rooms";
 import Login from "./containers/Login/Login";
 import Chat from "./containers/Chat/Chat";
+import Search from "./containers/Search/Search";
 import * as serviceWorker from "./serviceWorker";
 import "./i18n";
 import store from "./store";
@@ -18,6 +19,7 @@ ReactDOM.render(
         <Route exact path="/" component={Login} />
         <Route exact path="/rooms" component={Rooms} />
         <Route exact path="/chat" component={Chat} />
+        <Route exact path="/search" component={Search} />
       </div>
     </BrowserRouter>
   </Provider>,
