@@ -24,7 +24,7 @@ class Login extends React.Component {
         <input type="text" />
         <input type="password" />
         <button onClick={this.loginClicked}>
-          {t("login")}
+          {t("LOGIN.LOG_IN")}
         </button>
       </div>
     );

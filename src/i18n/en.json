@@ -1,3 +1,5 @@
 {
-  "login": "LOG IN"
+  "LOGIN.LOG_IN": "LOG IN",
+  
+  "ROOMS.START_CHAT": "START CHAT"
 }

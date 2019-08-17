@@ -4,8 +4,9 @@ import { Provider } from "react-redux";
 import { Route, BrowserRouter } from "react-router-dom";
 
 import "./index.css";
-import RoomsContainer from "./containers/Rooms/Rooms";
-import LoginComponent from "./containers/Login/Login";
+import Rooms from "./containers/Rooms/Rooms";
+import Login from "./containers/Login/Login";
+import Chat from "./containers/Chat/Chat";
 import * as serviceWorker from "./serviceWorker";
 import "./i18n";
 import store from "./store";
@@ -14,8 +15,9 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <div>
-        <Route exact path="/" component={LoginComponent} />
-        <Route exact path="/rooms" component={RoomsContainer} />
+        <Route exact path="/" component={Login} />
+        <Route exact path="/rooms" component={Rooms} />
+        <Route exact path="/chat" component={Chat} />
       </div>
     </BrowserRouter>
   </Provider>,
