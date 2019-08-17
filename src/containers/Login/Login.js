@@ -2,9 +2,9 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 
-import { logIn } from "../../actions";
+import { logIn } from "./actions";
 
-class LoginComponent extends React.Component {
+class Login extends React.Component {
   componentDidMount() {
     const { isLogged, history } = this.props;
     if (isLogged) history.push("/rooms");
@@ -39,4 +39,4 @@ const mapDispatchToProps = dispatch => ({
   logIn: () => dispatch(logIn())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(LoginComponent));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Login));

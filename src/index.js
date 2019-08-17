@@ -5,7 +5,7 @@ import { Route, BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 import RoomsContainer from "./containers/Rooms/Rooms";
-import LoginComponent from "./components/Login/Login";
+import LoginComponent from "./containers/Login/Login";
 import * as serviceWorker from "./serviceWorker";
 import "./i18n";
 import store from "./store";
