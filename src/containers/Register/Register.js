@@ -2,23 +2,23 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 
-import { logIn } from "./actions";
+import { logIn } from "../Login/actions";
 
-class Login extends React.Component {
+class Register extends React.Component {
   componentDidMount() {
     const { isLogged, history } = this.props;
     if (isLogged) history.push("/rooms");
   }
 
-  loginClicked = () => {
+  registerClicked = () => {
     const { history, logIn } = this.props;
     logIn();
     history.push("/rooms");
   };
 
-  registerClicked = () => {
+  loginClicked = () => {
     const { history } = this.props;
-    history.push("/register");
+    history.push("/");
   }
 
   render() {
@@ -29,13 +29,13 @@ class Login extends React.Component {
         <div>
           <input type="text" />
           <input type="password" />
-          <button onClick={this.loginClicked}>
-            {t("LOGIN.LOG_IN")}
+          <button onClick={this.registerClicked}>
+            {t("REGISTER.REGISTER")}
           </button>
         </div>
         <div>
-          <button onClick={this.registerClicked}>
-            {t("LOGIN.REGISTER")}
+          <button onClick={this.loginClicked}>
+            {t("REGISTER.LOG_IN")}
           </button>
         </div>
       </div>
@@ -51,4 +51,4 @@ const mapDispatchToProps = dispatch => ({
   logIn: () => dispatch(logIn())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Register));
