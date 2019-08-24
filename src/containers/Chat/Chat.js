@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 class Chat extends React.Component {
   componentDidMount() {
@@ -7,12 +8,24 @@ class Chat extends React.Component {
     if (!isLogged) history.push("/");
   }
 
+  goToRooms = () => {
+    const { history } = this.props;
+    history.push("/rooms");
+  };
+
   render() {
-    const { isLogged } = this.props;
+    const { t, isLogged } = this.props;
 
     return !isLogged ? <div /> : (
       <div>
-        Hello
+        <div>
+          <button onClick={this.goToRooms}>
+            {t("CHAT.CHAT_LIST")}
+          </button>
+        </div>
+        <div>
+          Hello
+        </div>
       </div>
     );
   }
@@ -22,4 +35,4 @@ const mapStateToProps = state => ({
   isLogged: state.login.isLogged
 });
 
-export default connect(mapStateToProps)(Chat);
+export default connect(mapStateToProps)(withTranslation()(Chat));

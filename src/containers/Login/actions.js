@@ -1,3 +1,7 @@
 export const logIn = () => ({
-  type: "LOG_IN"
+  type: "LOGIN_LOG_IN"
+});
+
+export const logOut = () => ({
+  type: "LOGIN_LOG_OUT"
 });

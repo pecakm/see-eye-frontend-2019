@@ -13,15 +13,27 @@ class Search extends React.Component {
     history.push("/chat");
   };
 
+  goToChatList = () => {
+    const { history } = this.props;
+    history.push("/rooms");
+  };
+
   render() {
     const { isLogged, t } = this.props;
 
     return !isLogged ? <div /> : (
       <div>
-        <input type="text" />
-        <button onClick={this.findUser}>
-          {t("SEARCH.SEARCH")}
-        </button>
+        <div>
+          <button onClick={this.goToChatList}>
+            {t("SEARCH.CHAT_LIST")}
+          </button>
+        </div>
+        <div>
+          <input type="text" />
+          <button onClick={this.findUser}>
+            {t("SEARCH.SEARCH")}
+          </button>
+        </div>
       </div>
     );
   }

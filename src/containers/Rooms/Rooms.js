@@ -3,11 +3,19 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
+import { logOut } from "../Login/actions";
+
 class Rooms extends React.Component {
   componentDidMount() {
     const { isLogged, history } = this.props;
     if (!isLogged) history.push("/");
   }
+
+  logout = () => {
+    const { history, logOut } = this.props;
+    logOut();
+    history.push("/");
+  };
 
   searchUser = () => {
     const { history } = this.props;
@@ -25,6 +33,11 @@ class Rooms extends React.Component {
     return !isLogged ? <div /> : (
       <div>
         <div>
+          <button onClick={this.logout}>
+            {t("ROOMS.LOG_OUT")}
+          </button>
+        </div>
+        <div>
           <button onClick={this.searchUser}>
             {t("ROOMS.SEARCH_USER")}
           </button>
@@ -41,4 +54,8 @@ const mapStateToProps = state => ({
   isLogged: state.login.isLogged
 });
 
-export default withRouter(connect(mapStateToProps)(withTranslation()(Rooms)));
+const mapDispatchToProps = dispatch => ({
+  logOut: () => dispatch(logOut())
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Rooms)));
