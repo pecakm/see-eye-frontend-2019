@@ -14,7 +14,7 @@ class Chat extends React.Component {
   };
 
   render() {
-    const { t, isLogged } = this.props;
+    const { isLogged, t } = this.props;
 
     return !isLogged ? <div /> : (
       <div>

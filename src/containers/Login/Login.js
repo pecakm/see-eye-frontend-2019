@@ -1,19 +1,41 @@
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
+import Cookies from "universal-cookie";
 
-import { logIn } from "./actions";
+import { logIn, logInFromCookie } from "./actions";
+import { CONSTANTS } from "../../helpers/constants";
 
 class Login extends React.Component {
+  state = {
+    nickname: "",
+    password: ""
+  };
+  cookies = new Cookies();
+
   componentDidMount() {
+    const { isLogged, history, logInFromCookie } = this.props;
+    if (isLogged) return history.push("/rooms");
+    if (this.cookies.get(CONSTANTS.TOKEN)) logInFromCookie();
+  }
+
+  componentDidUpdate() {
     const { isLogged, history } = this.props;
     if (isLogged) history.push("/rooms");
   }
 
+  handleValueChange = event => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
   loginClicked = () => {
-    const { history, logIn } = this.props;
-    logIn();
-    history.push("/rooms");
+    const { nickname, password } = this.state;
+    const data = {
+      nickname: nickname,
+      password: password
+    };
+    this.props.logIn(data);
   };
 
   registerClicked = () => {
@@ -22,13 +44,23 @@ class Login extends React.Component {
   }
 
   render() {
-    const { t, isLogged } = this.props;
+    const { isLogged, t } = this.props;
 
     return isLogged ? <div /> : (
       <div>
         <div>
-          <input type="text" />
-          <input type="password" />
+          <input
+            type="text"
+            name="nickname"
+            value={this.state.nameValue}
+            onChange={this.handleValueChange}
+          />
+          <input
+            type="password"
+            name="password"
+            value={this.state.passwordValue}
+            onChange={this.handleValueChange}
+          />
           <button onClick={this.loginClicked}>
             {t("LOGIN.LOG_IN")}
           </button>
@@ -45,10 +77,11 @@ class Login extends React.Component {
 
 const mapStateToProps = state => ({
   isLogged: state.login.isLogged
-});
+})
 
 const mapDispatchToProps = dispatch => ({
-  logIn: () => dispatch(logIn())
+  logIn: data => dispatch(logIn(data)),
+  logInFromCookie: () => dispatch(logInFromCookie())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Login));
