@@ -3,7 +3,7 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
 
-import { logIn, logInFromCookie } from "./actions";
+import { logIn, logInFromCookie, clearError } from "./actions";
 import { CONSTANTS } from "../../helpers/constants";
 
 class Login extends React.Component {
@@ -14,8 +14,9 @@ class Login extends React.Component {
   cookies = new Cookies();
 
   componentDidMount() {
-    const { isLogged, history, logInFromCookie } = this.props;
+    const { isLogged, history, loginMessage, clearError, logInFromCookie } = this.props;
     if (isLogged) return history.push("/rooms");
+    if (loginMessage) clearError();
     if (this.cookies.get(CONSTANTS.TOKEN)) logInFromCookie();
   }
 
@@ -44,7 +45,8 @@ class Login extends React.Component {
   }
 
   render() {
-    const { isLogged, t } = this.props;
+    const { isLogged, loginMessage, t } = this.props;
+    const { nickname, password } = this.state;
 
     return isLogged ? <div /> : (
       <div>
@@ -52,19 +54,22 @@ class Login extends React.Component {
           <input
             type="text"
             name="nickname"
-            value={this.state.nameValue}
+            value={nickname}
             onChange={this.handleValueChange}
           />
           <input
             type="password"
             name="password"
-            value={this.state.passwordValue}
+            value={password}
             onChange={this.handleValueChange}
           />
           <button onClick={this.loginClicked}>
             {t("LOGIN.LOG_IN")}
           </button>
         </div>
+        {loginMessage &&
+          <p>{t("LOGIN.ERROR")}</p>
+        }
         <div>
           <button onClick={this.registerClicked}>
             {t("LOGIN.REGISTER")}
@@ -76,12 +81,14 @@ class Login extends React.Component {
 };
 
 const mapStateToProps = state => ({
-  isLogged: state.login.isLogged
+  isLogged: state.login.isLogged,
+  loginMessage: state.login.message
 })
 
 const mapDispatchToProps = dispatch => ({
   logIn: data => dispatch(logIn(data)),
-  logInFromCookie: () => dispatch(logInFromCookie())
+  logInFromCookie: () => dispatch(logInFromCookie()),
+  clearError: () => dispatch(clearError())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Login));

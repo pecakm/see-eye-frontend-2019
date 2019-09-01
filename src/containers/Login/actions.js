@@ -7,7 +7,7 @@ export const logIn = data => dispatch => axios.post(
   type: "LOGIN_LOG_IN",
   payload: response.data
 })).catch(() => dispatch({
-  type: "LOGIN_LOG_OUT"
+  type: "LOGIN_SHOW_ERROR"
 }));
 
 export const logInFromCookie = () => ({
@@ -16,4 +16,8 @@ export const logInFromCookie = () => ({
 
 export const logOut = () => ({
   type: "LOGIN_LOG_OUT"
+});
+
+export const clearError = () => ({
+  type: "LOGIN_CLEAR_ERROR"
 });

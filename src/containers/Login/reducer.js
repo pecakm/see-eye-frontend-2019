@@ -3,7 +3,8 @@ import Cookies from "universal-cookie";
 import { CONSTANTS } from "../../helpers/constants";
 
 const login = (state = {
-  isLogged: false
+  isLogged: false,
+  message: false
 }, action) => {
   const cookies = new Cookies();
 
@@ -26,6 +27,19 @@ const login = (state = {
     state = {
       ...state,
       isLogged: false
+    };
+    return state;
+  case "LOGIN_SHOW_ERROR":
+    state = {
+      ...state,
+      isLogged: false,
+      message: true
+    };
+    return state;
+  case "LOGIN_CLEAR_ERROR":
+    state = {
+      ...state,
+      message: false
     };
     return state;
   default:
