@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Cookies from "universal-cookie";
 
 import { logIn, logInFromCookie, clearError } from "./actions";
-import { CONSTANTS } from "../../helpers/constants";
+import CONSTANTS from "../../helpers/constants";
 
 class Login extends React.Component {
   state = {

@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import CONSTANTS from "../../helpers/constants";
+
 export const logIn = data => dispatch => axios.post(
-  "http://localhost:3100/users/login",
+  `${CONSTANTS.API}/users/login`,
   data
 ).then(response => dispatch({
   type: "LOGIN_LOG_IN",

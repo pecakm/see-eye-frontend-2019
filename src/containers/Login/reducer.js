@@ -1,6 +1,6 @@
 import Cookies from "universal-cookie";
 
-import { CONSTANTS } from "../../helpers/constants";
+import CONSTANTS from "../../helpers/constants";
 
 const login = (state = {
   isLogged: false,

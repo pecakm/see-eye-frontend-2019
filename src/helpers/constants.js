@@ -1,3 +1,6 @@
-export const CONSTANTS = {
-  TOKEN: "token"
-}
+const CONSTANTS = {
+  TOKEN: "token",
+  API: "http://localhost:3100"
+};
+
+export default CONSTANTS;
