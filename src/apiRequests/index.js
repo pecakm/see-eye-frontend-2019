@@ -4,7 +4,6 @@ import Cookies from "universal-cookie";
 import CONSTANTS from "../helpers/constants";
 
 const cookies = new Cookies();
-const headers = { Authorization: `Bearer ${cookies.get(CONSTANTS.TOKEN)}` };
 
 export const login = data => (
   new Promise((resolve, reject) => {
@@ -31,7 +30,7 @@ export const searchUser = data => (
     axios.post(
       `${CONSTANTS.API}/users/find`,
       data,
-      { headers }
+      { headers: includeHeaders() }
     ).then(
       response => resolve(response.data)
     ).catch(reject);
@@ -42,7 +41,11 @@ export const loadChatData = id => (
   new Promise((resolve, reject) => {
     axios.get(
       `${CONSTANTS.API}/users/data/${id}`,
-      { headers }
+      { headers: includeHeaders() }
     ).then(response => resolve(response.data));
   })
 );
+
+const includeHeaders = () => ({
+  Authorization: `Bearer ${cookies.get(CONSTANTS.TOKEN)}`
+});

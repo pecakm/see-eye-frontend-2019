@@ -28,7 +28,7 @@ class Chat extends React.Component {
     const { isLogged, t } = this.props;
     const { nickname } = this.state;
 
-    return !isLogged ? <div /> : (
+    return !isLogged || !nickname ? <div /> : (
       <div>
         <div>
           <button onClick={this.goToRooms}>
@@ -37,6 +37,15 @@ class Chat extends React.Component {
         </div>
         <div>
           {nickname}
+        </div>
+        <div>
+          Messages
+        </div>
+        <div>
+          <input placeholder={t("CHAT.INPUT_PLACEHOLDER")} />
+          <button onClick={this.goToRooms}>
+            {t("CHAT.SEND_MESSAGE")}
+          </button>
         </div>
       </div>
     );
