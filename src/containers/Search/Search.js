@@ -51,7 +51,7 @@ class Search extends React.Component {
             onChange={this.handleValueChange}
           />
           <button onClick={this.searchClicked}>
-            {t("SEARCH.SEND_REQUEST")}
+            {t("SEARCH.START_CHAT")}
           </button>
         </div>
       </div>
