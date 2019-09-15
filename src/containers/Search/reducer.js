@@ -19,6 +19,7 @@ const register = (state = {
   case "SEARCH_CLEAR_ERROR":
     state = {
       ...state,
+      success: false,
       message: false
     };
     return state;

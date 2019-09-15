@@ -18,13 +18,14 @@ class Search extends React.Component {
 
     if (searchMessage) {
       alert(t("SEARCH.USER_NOT_FOUND"));
-      clearError();
     }
 
     if (searchSuccess) {
       alert(t("SEARCH.REQUEST_SENT"));
       history.push("/rooms");
     }
+
+    clearError();
   }
 
   handleValueChange = event => {
