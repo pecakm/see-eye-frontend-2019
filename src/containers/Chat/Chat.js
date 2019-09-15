@@ -2,10 +2,21 @@ import React from "react";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 
+import { loadChatData } from "../../apiRequests";
+
 class Chat extends React.Component {
+  state = { nickname: "" };
+
   componentDidMount() {
-    const { isLogged, history } = this.props;
-    if (!isLogged) history.push("/");
+    const { isLogged, history, match } = this.props;
+
+    if (!isLogged) {
+      history.push("/");
+    } else {
+      loadChatData(match.params.id).then(
+        nickname => this.setState({ nickname })
+      );
+    }
   }
 
   goToRooms = () => {
@@ -15,6 +26,7 @@ class Chat extends React.Component {
 
   render() {
     const { isLogged, t } = this.props;
+    const { nickname } = this.state;
 
     return !isLogged ? <div /> : (
       <div>
@@ -24,7 +36,7 @@ class Chat extends React.Component {
           </button>
         </div>
         <div>
-          Hello
+          {nickname}
         </div>
       </div>
     );

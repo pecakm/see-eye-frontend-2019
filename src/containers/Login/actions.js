@@ -1,14 +1,11 @@
-import axios from "axios";
+import { login } from "../../apiRequests";
 
-import CONSTANTS from "../../helpers/constants";
-
-export const logIn = data => dispatch => axios.post(
-  `${CONSTANTS.API}/users/login`,
-  data
-).then(response => dispatch({
-  type: "LOGIN_LOG_IN",
-  payload: response.data
-})).catch(() => dispatch({
+export const logIn = data => dispatch => login(data).then(
+  token => dispatch({
+    type: "LOGIN_LOG_IN",
+    payload: token
+  })
+).catch(() => dispatch({
   type: "LOGIN_SHOW_ERROR"
 }));
 

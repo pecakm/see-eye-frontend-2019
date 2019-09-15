@@ -19,7 +19,7 @@ ReactDOM.render(
       <div>
         <Route exact path="/" component={Login} />
         <Route exact path="/rooms" component={Rooms} />
-        <Route exact path="/chat" component={Chat} />
+        <Route exact path="/chat/:id" component={Chat} />
         <Route exact path="/search" component={Search} />
         <Route exact path="/register" component={Register} />
       </div>

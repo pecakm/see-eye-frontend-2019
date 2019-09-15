@@ -25,10 +25,10 @@ class Rooms extends React.Component {
     history.push("/search");
   };
 
-  startConversation = () => {
-    const { history } = this.props;
-    history.push("/chat");
-  };
+  // startConversation = () => {
+  //   const { history } = this.props;
+  //   history.push("/chat");
+  // };
   
   render() {
     const { isLogged, t } = this.props;
@@ -45,9 +45,9 @@ class Rooms extends React.Component {
             {t("ROOMS.SEARCH_USER")}
           </button>
         </div>
-        <button onClick={this.startConversation}>
+        {/* <button onClick={this.startConversation}>
           {t("ROOMS.START_CHAT")}
-        </button>
+        </button> */}
       </div>
     );
   }

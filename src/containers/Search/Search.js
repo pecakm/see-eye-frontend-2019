@@ -2,30 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 
-import { searchUser, clearError } from "./actions";
+import { searchUser } from "../../apiRequests";
 
 class Search extends React.Component {
-  state = {
-    nickname: ""
-  };
+  state = { nickname: "" };
+
   componentDidMount() {
     const { isLogged, history } = this.props;
     if (!isLogged) history.push("/");
-  }
-
-  componentDidUpdate() {
-    const { searchMessage, clearError, searchSuccess, t, history } = this.props;
-
-    if (searchMessage) {
-      alert(t("SEARCH.USER_NOT_FOUND"));
-    }
-
-    if (searchSuccess) {
-      alert(t("SEARCH.REQUEST_SENT"));
-      history.push("/rooms");
-    }
-
-    clearError();
   }
 
   handleValueChange = event => {
@@ -34,11 +18,13 @@ class Search extends React.Component {
   };
 
   searchClicked = () => {
+    const { t, history } = this.props;
     const { nickname } = this.state;
-    const data = {
-      nickname: nickname
-    };
-    this.props.searchUser(data);
+    const data = { nickname };
+
+    searchUser(data).then(
+      id => history.push(`/chat/${id}`)
+    ).catch(() => alert(t("SEARCH.USER_NOT_FOUND")));
   };
 
   goToChatList = () => {
@@ -74,14 +60,7 @@ class Search extends React.Component {
 };
 
 const mapStateToProps = state => ({
-  isLogged: state.login.isLogged,
-  searchMessage: state.search.message,
-  searchSuccess: state.search.success
+  isLogged: state.login.isLogged
 });
 
-const mapDispatchToProps = dispatch => ({
-  searchUser: data => dispatch(searchUser(data)),
-  clearError: () => dispatch(clearError())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Search));
+export default connect(mapStateToProps)(withTranslation()(Search));

@@ -1,13 +1,10 @@
-import axios from "axios";
+import { register } from "../../apiRequests";
 
-import CONSTANTS from "../../helpers/constants";
-
-export const registerUser = data => dispatch => axios.post(
-  `${CONSTANTS.API}/users/signup`,
-  data
-).then(response => dispatch({
-  type: "REGISTER_REGISTER"
-})).catch(() => dispatch({
+export const registerUser = data => dispatch => register(data).then(
+  () => dispatch({
+    type: "REGISTER_REGISTER"
+  })
+).catch(() => dispatch({
   type: "REGISTER_SHOW_ERROR"
 }));
 
