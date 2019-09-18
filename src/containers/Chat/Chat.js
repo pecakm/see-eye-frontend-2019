@@ -1,16 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 
 import { loadChatData } from "../../apiRequests";
+import CONSTANTS from "../../helpers/constants";
 
 class Chat extends React.Component {
   state = {
     nickname: "",
-    response: false,
-    endpoint: "http://127.0.0.1:3100/chat"
+    roomId: null,
+    chatItems: [],
+    chatInput: ""
   };
+  socket = null;
 
   componentDidMount() {
     const { isLogged, history, match } = this.props;
@@ -18,23 +21,56 @@ class Chat extends React.Component {
     if (!isLogged) {
       history.push("/");
     } else {
-      loadChatData(match.params.id).then(
-        nickname => this.setState({ nickname })
-      );
-      const { endpoint } = this.state;
-      const socket = socketIOClient(endpoint);
-      socket.on("FromAPI", data => this.setState({ response: data }));
+      loadChatData(match.params.id).then(({ nickname, roomId }) => {
+        this.setState({ nickname, roomId });
+        this.connectToSocket();
+      });
     }
   }
 
+  connectToSocket() {
+    const { roomId } = this.state;
+    this.socket = io(CONSTANTS.API);
+    this.socket.on("connect", () => (
+      this.socket.emit("room", roomId)
+    ));
+    this.socket.on("chat_message", data => (
+      this.updateConversation(data)
+    ));
+  }
+
+  updateConversation = (data, callback) => {
+    const { chatItems } = this.state;
+    this.setState({
+      chatItems: chatItems.concat(data)
+    }, callback);
+  };
+
   goToRooms = () => {
     const { history } = this.props;
+    this.socket.disconnect();
     history.push("/rooms");
+  };
+
+  sendMessage = () => {
+    const { chatInput, roomId } = this.state;
+    this.socket.emit("chat_message", {
+      room: roomId,
+      message: chatInput
+    });
+    this.updateConversation(chatInput, this.clearInput);
+  };
+
+  clearInput = () => this.setState({ chatInput: "" });
+
+  handleValueChange = event => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
 
   render() {
     const { isLogged, t } = this.props;
-    const { nickname, response } = this.state;
+    const { nickname, chatItems, chatInput } = this.state;
 
     return !isLogged || !nickname ? <div /> : (
       <div>
@@ -47,11 +83,19 @@ class Chat extends React.Component {
           {nickname}
         </div>
         <div>
-          Response: {response}
+          {chatItems.map((item, index) => (
+            <div key={index}>{item}</div>
+          ))}
         </div>
         <div>
-          <input placeholder={t("CHAT.INPUT_PLACEHOLDER")} />
-          <button onClick={this.goToRooms}>
+          <input
+            type="text"
+            placeholder={t("CHAT.WRITE_HERE")}
+            name="chatInput"
+            value={chatInput}
+            onChange={this.handleValueChange}
+          />
+          <button onClick={this.sendMessage}>
             {t("CHAT.SEND_MESSAGE")}
           </button>
         </div>

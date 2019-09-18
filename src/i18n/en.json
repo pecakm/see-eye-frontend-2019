@@ -18,6 +18,6 @@
   "SEARCH.START_CHAT": "START CHAT",
 
   "CHAT.CHAT_LIST": "CHATS' LIST",
-  "CHAT.INPUT_PLACEHOLDER": "Write here...",
+  "CHAT.WRITE_HERE": "Write here...",
   "CHAT.SEND_MESSAGE": "SEND"
 }
