@@ -37,14 +37,16 @@ export const searchUser = data => (
   })
 );
 
-export const loadChatData = id => (
-  new Promise((resolve, reject) => {
+export const loadChatData = userId => {
+  return new Promise((resolve, reject) => {
     axios.get(
-      `${CONSTANTS.API}/users/data/${id}`,
+      `${CONSTANTS.API}/rooms/${userId}`,
       { headers: includeHeaders() }
-    ).then(response => resolve(response.data));
+    ).then(
+      response => resolve(response.data)
+    ).catch(error => reject(error));
   })
-);
+};
 
 const includeHeaders = () => ({
   Authorization: `Bearer ${cookies.get(CONSTANTS.TOKEN)}`

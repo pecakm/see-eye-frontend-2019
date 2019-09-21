@@ -21,8 +21,11 @@ class Chat extends React.Component {
     if (!isLogged) {
       history.push("/");
     } else {
-      loadChatData(match.params.id).then(({ nickname, roomId }) => {
-        this.setState({ nickname, roomId });
+      loadChatData(match.params.id).then(room => {
+        this.setState({
+          nickname: room.users.find(item => item === match.params.id),
+          roomId: room._id
+        });
         this.connectToSocket();
       });
     }
