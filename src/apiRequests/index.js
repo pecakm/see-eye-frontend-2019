@@ -48,6 +48,17 @@ export const loadChatData = userId => {
   })
 };
 
+export const loadRooms = () => {
+  return new Promise((resolve, reject) => {
+    axios.get(
+      `${CONSTANTS.API}/rooms/all`,
+      { headers: includeHeaders() }
+    ).then(
+      response => resolve(response.data)
+    ).catch(error => reject(error));
+  })
+};
+
 const includeHeaders = () => ({
   Authorization: `Bearer ${cookies.get(CONSTANTS.TOKEN)}`
 });

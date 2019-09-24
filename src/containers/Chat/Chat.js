@@ -23,8 +23,8 @@ class Chat extends React.Component {
     } else {
       loadChatData(match.params.id).then(room => {
         this.setState({
-          nickname: room.users.find(item => item === match.params.id),
-          roomId: room._id
+          nickname: room.nickname,
+          roomId: room.id
         });
         this.connectToSocket();
       });
@@ -82,9 +82,9 @@ class Chat extends React.Component {
             {t("CHAT.CHAT_LIST")}
           </button>
         </div>
-        <div>
+        <p>
           {nickname}
-        </div>
+        </p>
         <div>
           {chatItems.map((item, index) => (
             <div key={index}>{item}</div>
