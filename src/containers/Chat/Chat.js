@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import io from "socket.io-client";
+import CryptoJS from "crypto-js";
 
 import { loadChatData } from "../../apiRequests";
 import CONSTANTS from "../../helpers/constants";
@@ -38,15 +39,17 @@ class Chat extends React.Component {
       this.socket.emit("room", roomId)
     ));
     this.socket.on("chat_message", data => (
-      this.updateConversation(data)
+      this.getAnswer(data)
     ));
   }
 
-  updateConversation = (data, callback) => {
+  getAnswer = data => {
     const { chatItems } = this.state;
+    const decryptedData = CryptoJS.AES.decrypt(data.toString(), "1");
+    const message = decryptedData.toString(CryptoJS.enc.Utf8);
     this.setState({
-      chatItems: chatItems.concat(data)
-    }, callback);
+      chatItems: chatItems.concat(message)
+    });
   };
 
   goToRooms = () => {
@@ -59,9 +62,16 @@ class Chat extends React.Component {
     const { chatInput, roomId } = this.state;
     this.socket.emit("chat_message", {
       room: roomId,
-      message: chatInput
+      message: CryptoJS.AES.encrypt(chatInput, "1")
     });
     this.updateConversation(chatInput, this.clearInput);
+  };
+
+  updateConversation = (data, callback) => {
+    const { chatItems } = this.state;
+    this.setState({
+      chatItems: chatItems.concat(data)
+    }, callback);
   };
 
   clearInput = () => this.setState({ chatInput: "" });
