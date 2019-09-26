@@ -45,7 +45,7 @@ class Chat extends React.Component {
 
   getAnswer = data => {
     const { chatItems } = this.state;
-    const decryptedData = CryptoJS.AES.decrypt(data.toString(), "1");
+    const decryptedData = CryptoJS.AES.decrypt(data.toString(), CONSTANTS.AES_SECRET);
     const message = decryptedData.toString(CryptoJS.enc.Utf8);
     this.setState({
       chatItems: chatItems.concat(message)
@@ -62,7 +62,7 @@ class Chat extends React.Component {
     const { chatInput, roomId } = this.state;
     this.socket.emit("chat_message", {
       room: roomId,
-      message: CryptoJS.AES.encrypt(chatInput, "1")
+      message: CryptoJS.AES.encrypt(chatInput, CONSTANTS.AES_SECRET).toString()
     });
     this.updateConversation(chatInput, this.clearInput);
   };
