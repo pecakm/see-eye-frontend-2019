@@ -35,14 +35,16 @@ class Chat extends React.Component {
 
   connectToSocket() {
     const { roomId } = this.state;
-    const key = Math.random().toString();
     this.socket = io(CONSTANTS.API);
     this.socket.on("connect", () => {
       this.socket.emit("chat_room", roomId);
-      this.setState({ key });
+      this.setState({ key: Math.random().toString() });
     });
-    this.socket.on("chat_online", key => {
-      this.setState({ key });
+    this.socket.on("chat_key", key => (
+      this.setState({ key })
+    ));
+    this.socket.on("chat_online", () => {
+      this.socket.emit("chat_key", { key: this.state.key, roomId });
       this.showUserOnline();
     });
     this.socket.on("chat_message", data => (
