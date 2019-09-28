@@ -38,34 +38,61 @@ class Chat extends React.Component {
     this.socket = io(CONSTANTS.API);
     this.socket.on("connect", () => {
       this.socket.emit("chat_room", roomId);
-      this.setState({ key: Math.random().toString() });
+      this.setState({
+        key: Math.random().toString(),
+        chatItems: JSON.parse(localStorage.getItem(roomId) || [])
+      });
     });
-    this.socket.on("chat_key", key => (
-      this.setState({ key })
-    ));
+    this.socket.on("chat_key", ({ key, chatItems }) => {
+      this.setState({ key, chatItems });
+      this.setUserOnline();
+    });
     this.socket.on("chat_online", () => {
-      this.socket.emit("chat_key", { key: this.state.key, roomId });
-      this.showUserOnline();
+      this.socket.emit("chat_key", {
+        key: this.state.key,
+        roomId,
+        chatItems: this.state.chatItems
+          .filter(item => item.storage)
+          .sort((item1, item2) => item1.timestamp > item2.timestamp)
+      });
+      this.setUserOnline();
     });
     this.socket.on("chat_message", data => (
       this.getAnswer(data)
     ));
   }
 
-  showUserOnline = () => {
+  setUserOnline = () => {
     const { chatItems, nickname } = this.state;
     this.setState({
-      chatItems: chatItems.concat(`Użytkownik ${nickname} jest online`)
+      chatItems: chatItems.concat({
+        text: `Użytkownik ${nickname} jest online`,
+        storage: false
+      })
     });
   };
 
   getAnswer = data => {
     const { chatItems, key } = this.state;
-    const decryptedData = CryptoJS.AES.decrypt(data.toString(), key);
+    const decryptedData = CryptoJS.AES.decrypt(data.text.toString(), key);
     const message = decryptedData.toString(CryptoJS.enc.Utf8);
     this.setState({
-      chatItems: chatItems.concat(message)
-    });
+      chatItems: chatItems.concat({
+        text: message,
+        storage: data.storage,
+        timestamp: data.timestamp
+      })
+    }, this.updateLocalStorage);
+  };
+
+  updateLocalStorage = () => {
+    const { roomId, chatItems } = this.state;
+    localStorage.setItem(
+      roomId,
+      JSON.stringify(chatItems
+        .filter(item => item.storage)
+        .sort((item1, item2) => item1.timestamp > item2.timestamp))
+    );
   };
 
   goToRooms = () => {
@@ -76,21 +103,29 @@ class Chat extends React.Component {
 
   sendMessage = () => {
     const { chatInput, roomId, key } = this.state;
+    const timestamp = Date.now();
     this.socket.emit("chat_message", {
       roomId,
-      message: CryptoJS.AES.encrypt(chatInput, key).toString()
+      message: {
+        text: CryptoJS.AES.encrypt(chatInput, key).toString(),
+        storage: true,
+        timestamp
+      }
     });
-    this.updateConversation(chatInput, this.clearInput);
+    this.updateChatItems({
+      text: chatInput,
+      storage: true,
+      timestamp
+    });
   };
 
-  updateConversation = (data, callback) => {
+  updateChatItems = message => {
     const { chatItems } = this.state;
     this.setState({
-      chatItems: chatItems.concat(data)
-    }, callback);
+      chatItems: chatItems.concat(message),
+      chatInput: ""
+    }, this.updateLocalStorage);
   };
-
-  clearInput = () => this.setState({ chatInput: "" });
 
   handleValueChange = event => {
     const { name, value } = event.target;
@@ -113,7 +148,7 @@ class Chat extends React.Component {
         </p>
         <div>
           {chatItems.map((item, index) => (
-            <div key={index}>{item}</div>
+            <div key={index}>{item.timestamp && `${item.timestamp}: `}{item.text}</div>
           ))}
         </div>
         <div>
