@@ -40,7 +40,7 @@ class Chat extends React.Component {
       this.socket.emit("chat_room", roomId);
       this.setState({
         key: Math.random().toString(),
-        chatItems: JSON.parse(localStorage.getItem(roomId) || [])
+        chatItems: JSON.parse(localStorage.getItem(roomId)) || []
       });
     });
     this.socket.on("chat_key", ({ key, chatItems }) => {
