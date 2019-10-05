@@ -13,7 +13,8 @@ class Chat extends React.Component {
     roomId: null,
     chatItems: [],
     chatInput: "",
-    key: ""
+    key: "",
+    sendingDisabled: true
   };
   socket = null;
 
@@ -39,21 +40,17 @@ class Chat extends React.Component {
     this.socket.on("connect", () => {
       this.socket.emit("chat_room", roomId);
       this.setState({
-        key: Math.random().toString(),
-        chatItems: JSON.parse(localStorage.getItem(roomId)) || []
+        key: Math.random().toString()
       });
     });
-    this.socket.on("chat_key", ({ key, chatItems }) => {
-      this.setState({ key, chatItems });
+    this.socket.on("chat_key", ({ key }) => {
+      this.setState({ key });
       this.setUserOnline();
     });
     this.socket.on("chat_online", () => {
       this.socket.emit("chat_key", {
         key: this.state.key,
-        roomId,
-        chatItems: this.state.chatItems
-          .filter(item => item.storage)
-          .sort((item1, item2) => item1.timestamp > item2.timestamp)
+        roomId
       });
       this.setUserOnline();
     });
@@ -66,33 +63,22 @@ class Chat extends React.Component {
     const { chatItems, nickname } = this.state;
     this.setState({
       chatItems: chatItems.concat({
-        text: `Użytkownik ${nickname} jest online`,
-        storage: false
-      })
+        text: `Użytkownik ${nickname} jest online`
+      }),
+      sendingDisabled: false
     });
   };
 
   getAnswer = data => {
-    const { chatItems, key } = this.state;
+    const { chatItems, key, nickname } = this.state;
     const decryptedData = CryptoJS.AES.decrypt(data.text.toString(), key);
     const message = decryptedData.toString(CryptoJS.enc.Utf8);
     this.setState({
       chatItems: chatItems.concat({
         text: message,
-        storage: data.storage,
-        timestamp: data.timestamp
+        user: nickname
       })
-    }, this.updateLocalStorage);
-  };
-
-  updateLocalStorage = () => {
-    const { roomId, chatItems } = this.state;
-    localStorage.setItem(
-      roomId,
-      JSON.stringify(chatItems
-        .filter(item => item.storage)
-        .sort((item1, item2) => item1.timestamp > item2.timestamp))
-    );
+    });
   };
 
   goToRooms = () => {
@@ -102,29 +88,20 @@ class Chat extends React.Component {
   };
 
   sendMessage = () => {
-    const { chatInput, roomId, key } = this.state;
-    const timestamp = Date.now();
+    const { chatInput, chatItems, roomId, key } = this.state;
     this.socket.emit("chat_message", {
       roomId,
       message: {
-        text: CryptoJS.AES.encrypt(chatInput, key).toString(),
-        storage: true,
-        timestamp
+        text: CryptoJS.AES.encrypt(chatInput, key).toString()
       }
     });
-    this.updateChatItems({
-      text: chatInput,
-      storage: true,
-      timestamp
-    });
-  };
-
-  updateChatItems = message => {
-    const { chatItems } = this.state;
     this.setState({
-      chatItems: chatItems.concat(message),
+      chatItems: chatItems.concat({
+        text: chatInput,
+        user: "You"
+      }),
       chatInput: ""
-    }, this.updateLocalStorage);
+    });
   };
 
   handleValueChange = event => {
@@ -134,7 +111,7 @@ class Chat extends React.Component {
 
   render() {
     const { isLogged, t } = this.props;
-    const { nickname, chatItems, chatInput } = this.state;
+    const { nickname, chatItems, chatInput, sendingDisabled } = this.state;
 
     return !isLogged || !nickname ? <div /> : (
       <div>
@@ -148,7 +125,7 @@ class Chat extends React.Component {
         </p>
         <div>
           {chatItems.map((item, index) => (
-            <div key={index}>{item.timestamp && `${item.timestamp}: `}{item.text}</div>
+            <div key={index}>{item.user && `${item.user}: `}{item.text}</div>
           ))}
         </div>
         <div>
@@ -159,7 +136,7 @@ class Chat extends React.Component {
             value={chatInput}
             onChange={this.handleValueChange}
           />
-          <button onClick={this.sendMessage}>
+          <button onClick={this.sendMessage} disabled={sendingDisabled}>
             {t("CHAT.SEND_MESSAGE")}
           </button>
         </div>
