@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import io from "socket.io-client";
 import CryptoJS from "crypto-js";
+import NodeRSA from "node-rsa";
 
 import { loadChatData } from "../../apiRequests";
 import CONSTANTS from "../../helpers/constants";
@@ -14,11 +15,10 @@ class Chat extends React.Component {
     chatItems: [],
     chatInput: "",
     chatKey: "",
-    privateKey: "",
-    publicKey: "",
     sendingDisabled: true
   };
   socket = null;
+  rsa = null;
 
   componentDidMount() {
     const { isLogged, history, match } = this.props;
@@ -41,42 +41,48 @@ class Chat extends React.Component {
     this.socket = io(CONSTANTS.API);
     this.socket.on("connect", () => {
       this.socket.emit("chat_room", roomId);
-      this.setKeyPairs();
     });
     this.socket.on("chat_online", () => {
+      this.rsa = new NodeRSA({ b: 512 });
+      this.rsa.generateKeyPair();
       this.socket.emit("chat_key", {
-        publicKey: this.state.publicKey,
+        publicKey: this.rsa.exportKey("public"),
         roomId
       });
     });
     this.socket.on("chat_key", publicKey => {
-      this.setChatKey(publicKey);
-      this.socket.emit("chat_key2", {
-        publicKey: this.state.publicKey,
-        roomId
-      });
+      const { chatItems, nickname } = this.state;
+      this.setState({
+        chatKey: Math.random().toString(),
+        chatItems: chatItems.concat({
+          text: `Użytkownik ${nickname} jest online`
+        }),
+        sendingDisabled: false
+      }, () => this.sendChatKey(publicKey));
     });
-    this.socket.on("chat_key2", publicKey => this.setChatKey(publicKey));
+    this.socket.on("chat_key2", encryptedKey => this.getChatKey(encryptedKey));
     this.socket.on("chat_message", data => this.getAnswer(data));
   }
 
-  setKeyPairs = () => {
-    const privateKey = Math.floor(Math.random() * 10);
-    this.setState({
-      privateKey,
-      publicKey: Math.pow(CONSTANTS.GENERATOR, privateKey) % CONSTANTS.PRIME
+  sendChatKey = publicKey => {
+    const { roomId, chatKey } = this.state;
+    this.rsa = new NodeRSA(publicKey);
+
+    this.socket.emit("chat_key2", {
+      encryptedKey: this.rsa.encrypt(chatKey, "base64"),
+      roomId
     });
   };
 
-  setChatKey = publicKey => {
+  getChatKey = encryptedKey => {
     const { chatItems, nickname } = this.state;
-    const key = Math.pow(publicKey, this.state.privateKey) % CONSTANTS.PRIME;
+    const chatKey = this.rsa.decrypt(encryptedKey, "utf8");
     this.setState({
-      chatKey: key.toString(),
+      chatKey,
       chatItems: chatItems.concat({
         text: `Użytkownik ${nickname} jest online`
       }),
-      sendingDisabled: false
+      sendingDisabled: false,
     });
   };
 
