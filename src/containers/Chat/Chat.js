@@ -13,7 +13,9 @@ class Chat extends React.Component {
     roomId: null,
     chatItems: [],
     chatInput: "",
-    key: "",
+    chatKey: "",
+    privateKey: "",
+    publicKey: "",
     sendingDisabled: true
   };
   socket = null;
@@ -39,29 +41,38 @@ class Chat extends React.Component {
     this.socket = io(CONSTANTS.API);
     this.socket.on("connect", () => {
       this.socket.emit("chat_room", roomId);
-      this.setState({
-        key: Math.random().toString()
-      });
-    });
-    this.socket.on("chat_key", ({ key }) => {
-      this.setState({ key });
-      this.setUserOnline();
+      this.setKeyPairs();
     });
     this.socket.on("chat_online", () => {
       this.socket.emit("chat_key", {
-        key: this.state.key,
+        publicKey: this.state.publicKey,
         roomId
       });
-      this.setUserOnline();
     });
-    this.socket.on("chat_message", data => (
-      this.getAnswer(data)
-    ));
+    this.socket.on("chat_key", publicKey => {
+      this.setChatKey(publicKey);
+      this.socket.emit("chat_key2", {
+        publicKey: this.state.publicKey,
+        roomId
+      });
+    });
+    this.socket.on("chat_key2", publicKey => this.setChatKey(publicKey));
+    this.socket.on("chat_message", data => this.getAnswer(data));
   }
 
-  setUserOnline = () => {
-    const { chatItems, nickname } = this.state;
+  setKeyPairs = () => {
+    const privateKey = Math.floor(Math.random() * 10);
     this.setState({
+      privateKey,
+      publicKey: Math.pow(CONSTANTS.GENERATOR, privateKey) % CONSTANTS.PRIME
+    });
+  };
+
+  setChatKey = publicKey => {
+    const { chatItems, nickname } = this.state;
+    const key = Math.pow(publicKey, this.state.privateKey) % CONSTANTS.PRIME;
+    this.setState({
+      chatKey: key.toString(),
       chatItems: chatItems.concat({
         text: `Użytkownik ${nickname} jest online`
       }),
@@ -70,8 +81,8 @@ class Chat extends React.Component {
   };
 
   getAnswer = data => {
-    const { chatItems, key, nickname } = this.state;
-    const decryptedData = CryptoJS.AES.decrypt(data.text.toString(), key);
+    const { chatItems, chatKey, nickname } = this.state;
+    const decryptedData = CryptoJS.AES.decrypt(data.text.toString(), chatKey);
     const message = decryptedData.toString(CryptoJS.enc.Utf8);
     this.setState({
       chatItems: chatItems.concat({
@@ -88,11 +99,11 @@ class Chat extends React.Component {
   };
 
   sendMessage = () => {
-    const { chatInput, chatItems, roomId, key } = this.state;
+    const { chatInput, chatItems, roomId, chatKey } = this.state;
     this.socket.emit("chat_message", {
       roomId,
       message: {
-        text: CryptoJS.AES.encrypt(chatInput, key).toString()
+        text: CryptoJS.AES.encrypt(chatInput, chatKey).toString()
       }
     });
     this.setState({
