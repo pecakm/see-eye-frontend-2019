@@ -13,6 +13,8 @@ import * as serviceWorker from "./serviceWorker";
 import "./i18n";
 import store from "./store";
 
+require("dotenv").config();
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>

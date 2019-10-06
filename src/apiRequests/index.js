@@ -8,7 +8,7 @@ const cookies = new Cookies();
 export const login = data => (
   new Promise((resolve, reject) => {
     axios.post(
-      `${CONSTANTS.API}/users/login`,
+      `${process.env.REACT_APP_API}/users/login`,
       data
     ).then(
       response => resolve(response.data)
@@ -19,7 +19,7 @@ export const login = data => (
 export const register = data => (
   new Promise((resolve, reject) => {
     axios.post(
-      `${CONSTANTS.API}/users/signup`,
+      `${process.env.REACT_APP_API}/users/signup`,
       data
     ).then(resolve).catch(reject);
   })
@@ -28,7 +28,7 @@ export const register = data => (
 export const searchUser = data => (
   new Promise((resolve, reject) => {
     axios.post(
-      `${CONSTANTS.API}/users/find`,
+      `${process.env.REACT_APP_API}/users/find`,
       data,
       { headers: includeHeaders() }
     ).then(
@@ -40,7 +40,7 @@ export const searchUser = data => (
 export const loadChatData = userId => {
   return new Promise((resolve, reject) => {
     axios.get(
-      `${CONSTANTS.API}/rooms/${userId}`,
+      `${process.env.REACT_APP_API}/rooms/${userId}`,
       { headers: includeHeaders() }
     ).then(
       response => resolve(response.data)
@@ -51,7 +51,7 @@ export const loadChatData = userId => {
 export const loadRooms = () => {
   return new Promise((resolve, reject) => {
     axios.get(
-      `${CONSTANTS.API}/rooms/all`,
+      `${process.env.REACT_APP_API}/rooms/all`,
       { headers: includeHeaders() }
     ).then(
       response => resolve(response.data)

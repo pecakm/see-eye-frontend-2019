@@ -6,7 +6,6 @@ import CryptoJS from "crypto-js";
 import NodeRSA from "node-rsa";
 
 import { loadChatData } from "../../apiRequests";
-import CONSTANTS from "../../helpers/constants";
 
 class Chat extends React.Component {
   state = {
@@ -38,7 +37,7 @@ class Chat extends React.Component {
 
   connectToSocket() {
     const { roomId } = this.state;
-    this.socket = io(CONSTANTS.API);
+    this.socket = io(process.env.REACT_APP_API);
     this.socket.on("connect", () => {
       this.socket.emit("chat_room", roomId);
     });
