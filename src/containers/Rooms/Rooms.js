@@ -6,6 +6,15 @@ import Cookies from "universal-cookie";
 
 import { logOut } from "../Login/actions";
 import { loadRooms } from "../../apiRequests";
+import Logo from "../../images/logo.png";
+import {
+  Menu,
+  LogoWrapper,
+  LogoutButton,
+  SearchButton,
+  ContactsWrapper,
+  ContactButton,
+} from "./Rooms.styled";
 
 class Rooms extends React.Component {
   state = { rooms: [] };
@@ -39,26 +48,27 @@ class Rooms extends React.Component {
 
     return !isLogged ? <div /> : (
       <div>
-        <div>
-          <button onClick={this.logout}>
-            {t("ROOMS.LOG_OUT")}
-          </button>
-        </div>
-        <div>
-          <button onClick={this.searchUser}>
-            {t("ROOMS.SEARCH_USER")}
-          </button>
-        </div>
-        <div>
+        <Menu>
+          <LogoWrapper src={Logo} />
+          <div>
+            <SearchButton onClick={this.searchUser}>
+              {t("ROOMS.SEARCH_USER")}
+            </SearchButton>
+            <LogoutButton onClick={this.logout}>
+              {t("ROOMS.LOG_OUT")}
+            </LogoutButton>
+          </div>
+        </Menu>
+        <ContactsWrapper>
           <h3>
             {t("ROOMS.CONTACTS")}
           </h3>
           {rooms.map((room, index) => (
-            <button key={index} onClick={() => this.goChat(room._id)}>
+            <ContactButton key={index} onClick={() => this.goChat(room._id)}>
               {room.nickname}
-            </button>
+            </ContactButton>
           ))}
-        </div>
+        </ContactsWrapper>
       </div>
     );
   }

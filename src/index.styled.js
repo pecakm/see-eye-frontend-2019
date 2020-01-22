@@ -78,3 +78,14 @@ export const BaseLink = styled.button`
     text-decoration: underline;
   }
 `;
+
+export const BaseMenu = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+`;
+
+export const MenuLogo = styled.img`
+  width: 60px;
+`;
