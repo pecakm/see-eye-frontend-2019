@@ -1,6 +1,7 @@
 {
   "LOGIN.LOG_IN": "LOG IN",
-  "LOGIN.REGISTER": "REGISTER",
+  "LOGIN.REGISTER.LINK": "Register here!",
+  "LOGIN.REGISTER.LABEL": "Don't have an account? ",
   "LOGIN.ERROR": "ERROR OCCURRED",
 
   "REGISTER.REGISTER": "REGISTER USER",

@@ -5,6 +5,17 @@ import Cookies from "universal-cookie";
 
 import { logIn, logInFromCookie, clearError } from "./actions";
 import CONSTANTS from "../../helpers/constants";
+import Logo from "../../images/logo.png";
+import {
+  LoginButton,
+  LoginFieldsWrapper,
+  Field,
+  Container,
+  LogoWrapper,
+  Error,
+  RegisterWrapper,
+  RegisterLink,
+} from "./Login.styled";
 
 class Login extends React.Component {
   state = {
@@ -49,33 +60,37 @@ class Login extends React.Component {
     const { nickname, password } = this.state;
 
     return isLogged ? <div /> : (
-      <div>
-        <div>
-          <input
+      <Container>
+        <LogoWrapper src={Logo} />
+        <LoginFieldsWrapper>
+          <Field
             type="text"
             name="nickname"
             value={nickname}
             onChange={this.handleValueChange}
+            placeholder="Nickname"
           />
-          <input
+          <Field
             type="password"
             name="password"
             value={password}
             onChange={this.handleValueChange}
+            placeholder="Password"
           />
-          <button onClick={this.loginClicked}>
+          <LoginButton onClick={this.loginClicked}>
             {t("LOGIN.LOG_IN")}
-          </button>
-        </div>
+          </LoginButton>
+        </LoginFieldsWrapper>
         {loginMessage &&
-          <p>{t("LOGIN.ERROR")}</p>
+          <Error>{t("LOGIN.ERROR")}</Error>
         }
-        <div>
-          <button onClick={this.registerClicked}>
-            {t("LOGIN.REGISTER")}
-          </button>
-        </div>
-      </div>
+        <RegisterWrapper>
+          <span>{t("LOGIN.REGISTER.LABEL")}</span>
+          <RegisterLink onClick={this.registerClicked}>
+            {t("LOGIN.REGISTER.LINK")}
+          </RegisterLink>
+        </RegisterWrapper>
+      </Container>
     );
   }
 };
