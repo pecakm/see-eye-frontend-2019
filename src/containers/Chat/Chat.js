@@ -6,6 +6,19 @@ import CryptoJS from "crypto-js";
 import NodeRSA from "node-rsa";
 
 import { loadChatData } from "../../apiRequests";
+import Logo from "../../images/logo.png";
+import {
+  Menu,
+  LogoWrapper,
+  ChatsListButton,
+  ContactNameWrapper,
+  ContactName,
+  InputWrapper,
+  Field,
+  SendButton,
+  ChatWrapper,
+  Message,
+} from "./Chat.styled";
 
 class Chat extends React.Component {
   state = {
@@ -129,33 +142,43 @@ class Chat extends React.Component {
     const { isLogged, t } = this.props;
     const { nickname, chatItems, chatInput, sendingDisabled } = this.state;
 
+    const messages = [...chatItems].reverse();
+
     return !isLogged || !nickname ? <div /> : (
       <div>
-        <div>
-          <button onClick={this.goToRooms}>
+        <Menu>
+          <LogoWrapper src={Logo} />
+          <ChatsListButton onClick={this.goToRooms}>
             {t("CHAT.CHAT_LIST")}
-          </button>
-        </div>
-        <p>
-          {nickname}
-        </p>
-        <div>
-          {chatItems.map((item, index) => (
-            <div key={index}>{item.user && `${item.user}: `}{item.text}</div>
-          ))}
-        </div>
-        <div>
-          <input
+          </ChatsListButton>
+        </Menu>
+        {nickname && (
+          <ContactNameWrapper>
+            <small>{t("CHAT.CHAT_WITH")}</small> <ContactName>{nickname}</ContactName>
+          </ContactNameWrapper>
+        )}
+        <InputWrapper>
+          <Field
             type="text"
             placeholder={t("CHAT.WRITE_HERE")}
             name="chatInput"
             value={chatInput}
             onChange={this.handleValueChange}
           />
-          <button onClick={this.sendMessage} disabled={sendingDisabled}>
+          <SendButton onClick={this.sendMessage} disabled={sendingDisabled}>
             {t("CHAT.SEND_MESSAGE")}
-          </button>
-        </div>
+          </SendButton>
+        </InputWrapper>
+        <ChatWrapper>
+          {messages.map((item, index) => (
+            <Message key={index}
+              isSender={item.user === "You"}
+              isReceiver={item.user && item.user !== "You"}
+            >
+              {item.user && `${item.user}: `}{item.text}
+            </Message>
+          ))}
+        </ChatWrapper>
       </div>
     );
   }

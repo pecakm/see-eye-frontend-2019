@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import {
+  BaseTitle,
   BaseButton,
   BaseInput,
   BaseError,
@@ -17,9 +18,11 @@ export const Container = styled.div`
   }
 `;
 
+export const Title = styled(BaseTitle)``;
+
 export const LogoWrapper = styled.img`
   width: 150px;
-  margin: 25px auto;
+  margin: 0 auto;
 `;
 
 export const FieldsWrapper = styled.div`

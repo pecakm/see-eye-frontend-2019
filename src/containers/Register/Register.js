@@ -6,6 +6,7 @@ import { clearError, registerUser } from "./actions";
 import Logo from "../../images/logo.png";
 import {
   Container,
+  Title,
   LogoWrapper,
   FieldsWrapper,
   Field,
@@ -62,6 +63,7 @@ class Register extends React.Component {
     return isLogged ? <div /> : (
       <Container>
         <LogoWrapper src={Logo} />
+        <Title>{t("COMMON.TITLE")}</Title>
         <FieldsWrapper>
           <Field
             type="text"

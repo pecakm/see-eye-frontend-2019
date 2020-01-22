@@ -7,6 +7,7 @@ import { logIn, logInFromCookie, clearError } from "./actions";
 import CONSTANTS from "../../helpers/constants";
 import Logo from "../../images/logo.png";
 import {
+  Title,
   LoginButton,
   FieldsWrapper,
   Field,
@@ -62,6 +63,7 @@ class Login extends React.Component {
     return isLogged ? <div /> : (
       <Container>
         <LogoWrapper src={Logo} />
+        <Title>{t("COMMON.TITLE")}</Title>
         <FieldsWrapper>
           <Field
             type="text"

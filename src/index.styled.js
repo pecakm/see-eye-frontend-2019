@@ -32,10 +32,18 @@ export const GlobalStyle = styled.div`
   }
 `;
 
+export const BaseTitle = styled.h1`
+  text-align: center;
+  margin: 0;
+  color: ${Color.Primary};
+  margin-bottom: 25px;
+`;
+
 export const BaseButton = styled.button`
   padding: 0.3em 1.2em;
   border-radius: 2em;
   box-sizing: border-box;
+  border: 2px solid ${Color.Primary};
   text-decoration: none;
   font-weight: 700;
   letter-spacing: 1px;

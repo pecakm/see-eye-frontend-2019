@@ -7,16 +7,6 @@ import {
   BaseInput,
 } from "../../index.styled";
 
-export const Container = styled.div`
-  padding-top: 10px;
-  display: flex;
-  flex-direction: column;
-
-  @media (min-width: 400px) {
-    padding-top: 75px;
-  }
-`;
-
 export const Menu = styled(BaseMenu)``;
 
 export const ChatsListButton = styled(BaseButton)``;

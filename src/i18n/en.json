@@ -1,4 +1,6 @@
 {
+  "COMMON.TITLE": "See Eye Chat",
+
   "LOGIN.LOG_IN": "LOG IN",
   "LOGIN.REGISTER.LINK": "Register here!",
   "LOGIN.REGISTER.LABEL": "Don't have an account? ",
@@ -21,6 +23,7 @@
   "SEARCH.START_CHAT": "START CHAT",
 
   "CHAT.CHAT_LIST": "CHATS' LIST",
+  "CHAT.CHAT_WITH": "Rozmowa z:",
   "CHAT.WRITE_HERE": "Write here...",
   "CHAT.SEND_MESSAGE": "SEND"
 }
