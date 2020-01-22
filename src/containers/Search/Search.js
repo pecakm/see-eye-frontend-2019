@@ -3,6 +3,15 @@ import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 
 import { searchUser } from "../../apiRequests";
+import Logo from "../../images/logo.png";
+import {
+  Menu,
+  LogoWrapper,
+  ChatsListButton,
+  SearchWrapper,
+  Field,
+  SearchButton,
+} from "./Search.styled";
 
 class Search extends React.Component {
   state = { nickname: "" };
@@ -38,22 +47,24 @@ class Search extends React.Component {
 
     return !isLogged ? <div /> : (
       <div>
-        <div>
-          <button onClick={this.goToChatList}>
+        <Menu>
+          <LogoWrapper src={Logo} />
+          <ChatsListButton onClick={this.goToChatList}>
             {t("SEARCH.CHAT_LIST")}
-          </button>
-        </div>
-        <div>
-          <input
+          </ChatsListButton>
+        </Menu>
+        <SearchWrapper>
+          <Field
             type="text"
             name="nickname"
             value={nickname}
             onChange={this.handleValueChange}
+            placeholder="Type a nickname to find..."
           />
-          <button onClick={this.searchClicked}>
+          <SearchButton onClick={this.searchClicked}>
             {t("SEARCH.START_CHAT")}
-          </button>
-        </div>
+          </SearchButton>
+        </SearchWrapper>
       </div>
     );
   }

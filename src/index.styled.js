@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Color = {
   Primary: "#5B6395",
+  Secondary: "#BAF7CD",
 };
 
 export const GlobalStyle = styled.div`
@@ -33,7 +34,6 @@ export const GlobalStyle = styled.div`
 
 export const BaseButton = styled.button`
   padding: 0.3em 1.2em;
-  margin: 0 0.3em 0.3em 0;
   border-radius: 2em;
   box-sizing: border-box;
   text-decoration: none;

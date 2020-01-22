@@ -10,6 +10,7 @@ import Logo from "../../images/logo.png";
 import {
   Menu,
   LogoWrapper,
+  MenuButtons,
   LogoutButton,
   SearchButton,
   ContactsWrapper,
@@ -50,14 +51,14 @@ class Rooms extends React.Component {
       <div>
         <Menu>
           <LogoWrapper src={Logo} />
-          <div>
+          <MenuButtons>
             <SearchButton onClick={this.searchUser}>
               {t("ROOMS.SEARCH_USER")}
             </SearchButton>
             <LogoutButton onClick={this.logout}>
               {t("ROOMS.LOG_OUT")}
             </LogoutButton>
-          </div>
+          </MenuButtons>
         </Menu>
         <ContactsWrapper>
           <h3>
