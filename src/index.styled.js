@@ -62,6 +62,7 @@ export const BaseInput = styled.input`
 
 export const BaseError = styled.p`
   color: red;
+  text-align: center;
 `;
 
 export const BaseLink = styled.button`
@@ -69,8 +70,11 @@ export const BaseLink = styled.button`
   border: none;
   font-size: 16px;
   color: ${Color.Primary};
-  text-decoration: underline;
   padding: 0;
   cursor: pointer;
   font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;

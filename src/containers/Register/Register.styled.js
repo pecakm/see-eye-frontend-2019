@@ -22,8 +22,6 @@ export const LogoWrapper = styled.img`
   margin: 25px auto;
 `;
 
-export const LoginButton = styled(BaseButton)``;
-
 export const FieldsWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -33,11 +31,13 @@ export const Field = styled(BaseInput)`
   margin-bottom: 25px;
 `;
 
+export const RegisterButton = styled(BaseButton)``;
+
 export const Error = styled(BaseError)``;
 
-export const RegisterWrapper = styled.div`
+export const LoginWrapper = styled.div`
   margin-top: 45px;
   text-align: center;
 `;
 
-export const RegisterLink = styled(BaseLink)``;
+export const LoginLink = styled(BaseLink)``;

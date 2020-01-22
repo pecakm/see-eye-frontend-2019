@@ -8,7 +8,7 @@ import CONSTANTS from "../../helpers/constants";
 import Logo from "../../images/logo.png";
 import {
   LoginButton,
-  LoginFieldsWrapper,
+  FieldsWrapper,
   Field,
   Container,
   LogoWrapper,
@@ -62,7 +62,7 @@ class Login extends React.Component {
     return isLogged ? <div /> : (
       <Container>
         <LogoWrapper src={Logo} />
-        <LoginFieldsWrapper>
+        <FieldsWrapper>
           <Field
             type="text"
             name="nickname"
@@ -80,7 +80,7 @@ class Login extends React.Component {
           <LoginButton onClick={this.loginClicked}>
             {t("LOGIN.LOG_IN")}
           </LoginButton>
-        </LoginFieldsWrapper>
+        </FieldsWrapper>
         {loginMessage &&
           <Error>{t("LOGIN.ERROR")}</Error>
         }

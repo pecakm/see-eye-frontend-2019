@@ -3,6 +3,17 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 
 import { clearError, registerUser } from "./actions";
+import Logo from "../../images/logo.png";
+import {
+  Container,
+  LogoWrapper,
+  FieldsWrapper,
+  Field,
+  RegisterButton,
+  Error,
+  LoginWrapper,
+  LoginLink,
+} from "./Register.styled";
 
 class Register extends React.Component {
   state = {
@@ -49,33 +60,37 @@ class Register extends React.Component {
     const { nickname, password } = this.state;
 
     return isLogged ? <div /> : (
-      <div>
-        <div>
-          <input
+      <Container>
+        <LogoWrapper src={Logo} />
+        <FieldsWrapper>
+          <Field
             type="text"
             name="nickname"
             value={nickname}
             onChange={this.handleValueChange}
+            placeholder="Nickname (must be unique!)"
           />
-          <input
+          <Field
             type="password"
             name="password"
             value={password}
             onChange={this.handleValueChange}
+            placeholder="Password (min. 6 characters)"
           />
-          <button onClick={this.registerClicked}>
+          <RegisterButton onClick={this.registerClicked}>
             {t("REGISTER.REGISTER")}
-          </button>
-        </div>
+          </RegisterButton>
+        </FieldsWrapper>
         {registerMessage &&
-          <p>{t("REGISTER.FAILURE")}</p>
+          <Error>{t("REGISTER.FAILURE")}</Error>
         }
-        <div>
-          <button onClick={this.loginClicked}>
-            {t("REGISTER.LOG_IN")}
-          </button>
-        </div>
-      </div>
+        <LoginWrapper>
+          <span>{t("REGISTER.LOG_IN.LABEL")}</span>
+          <LoginLink onClick={this.loginClicked}>
+            {t("REGISTER.LOG_IN.LINK")}
+          </LoginLink>
+        </LoginWrapper>
+      </Container>
     );
   }
 };
